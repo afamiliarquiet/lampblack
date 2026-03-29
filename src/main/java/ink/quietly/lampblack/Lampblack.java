@@ -15,7 +15,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.level.ServerPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,7 +97,7 @@ public class Lampblack implements ModInitializer {
 				ctx.getSource().sendSystemMessage(Component.literal("Your preference has been saved! Some displays may not update until you send a chat message.").withStyle(ChatFormatting.GRAY));
 				return 1;
 			} else {
-				ctx.getSource().sendSystemMessage(Component.literal("Could not set your preference.").withStyle(ChatFormatting.RED).append(Component.literal("For display reasons, pronoun preference is limited to 16 characters.").withStyle(ChatFormatting.GRAY)));
+				ctx.getSource().sendSystemMessage(Component.literal("Could not set your preference.").withStyle(ChatFormatting.RED).append(Component.literal(" For display reasons, pronoun preference is limited to 16 characters.").withStyle(ChatFormatting.GRAY)));
 				return 0;
 			}
 		} else {
