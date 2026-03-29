@@ -9,7 +9,9 @@ a simple pronoun mod
 
 # lampblack pronouns
 
-lampblack is designed to be the simplest pronouns mod that suits my needs - having a [placeholder](https://modrinth.com/mod/placeholder-api) for displaying pronouns in various places, and, compatibility with [switchy](https://modrinth.com/mod/switchy).
+lampblack is designed to be the simplest pronouns mod that suits my needs - 
+having a [placeholder](https://modrinth.com/mod/placeholder-api) for displaying pronouns in various places, 
+and, compatibility with [switchy](https://modrinth.com/mod/switchy).
 
 ---
 
@@ -21,4 +23,7 @@ and to view the preferences of other players, use`/pronouns inspect <player>`
 
 ---
 
-if you are a server admin setting up a more convenient way to view pronouns, you can use the built-in [placeholder](https://modrinth.com/mod/placeholder-api) %lampblack:pronouns% wherever placeholders are supported (check out [styled player list](https://modrinth.com/mod/styledplayerlist))
+if you are a server admin setting up a more convenient way to view pronouns, 
+you can use the built-in [placeholder](https://modrinth.com/mod/placeholder-api) 
+`%lampblack:pronouns%` wherever placeholders are supported 
+(check out [styled player list](https://modrinth.com/mod/styledplayerlist))
