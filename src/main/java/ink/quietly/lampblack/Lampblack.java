@@ -52,30 +52,25 @@ public class Lampblack implements ModInitializer {
 		CommandRegistrationCallback.EVENT.register(
 			(dispatcher, buildCtx, env) -> {
 			dispatcher.register(literal("pronouns")
+				.executes(this::clearPronouns)
 				.then(
-					literal("set")
-						.then(
-							argument("pronouns", StringArgumentType.greedyString())
-								.suggests((ignored, builder) -> {
-									builder.suggest("he/him");
-									builder.suggest("she/her");
-									builder.suggest("they/them");
+					argument("pronouns", StringArgumentType.greedyString())
+						.suggests((ignored, builder) -> {
+							builder.suggest("he/him");
+							builder.suggest("she/her");
+							builder.suggest("they/them");
 
-									return builder.buildFuture();
-								})
-								.executes(ctx -> setPronouns(ctx))
-						)
+							return builder.buildFuture();
+						})
+						.executes(this::setPronouns)
 				)
+			);
+
+			// doesn't really need to be a command
+			dispatcher.register(literal("showpronouns")
 				.then(
-					literal("clear")
-						.executes(ctx -> clearPronouns(ctx))
-				)
-				.then(
-					literal("inspect")
-						.then(
-							argument("target", EntityArgument.player())
-								.executes(ctx -> inspect(ctx))
-						)
+					argument("target", EntityArgument.player())
+						.executes(this::inspect)
 				)
 			);
 		});

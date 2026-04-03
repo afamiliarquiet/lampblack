@@ -15,13 +15,11 @@ and, compatibility with [switchy](https://modrinth.com/mod/switchy).
 
 ---
 
-to set your pronoun preference, use `/pronouns set <up to 16 characters describing your preference>`
+to set your pronoun preference, use `/pronouns <up to 16 characters describing your preference>`
 
-to reset/clear your pronoun preference, use `/pronouns clear`
+to reset/clear your pronoun preference, use `/pronouns`
 
-and to view the preferences of other players, use`/pronouns inspect <player>`
-
----
+and to view the preferences of other players, use`/showpronouns <player>` - but
 
 if you are a server admin setting up a more convenient way to view pronouns, 
 you can use the built-in [placeholder](https://modrinth.com/mod/placeholder-api) 
