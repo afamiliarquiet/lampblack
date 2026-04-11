@@ -1,7 +1,7 @@
 {
 	"enabled": true,
 	"codec": "string",
-	"path": "fabric:attachments.lampblack:pronouns",
+	"path": "lampblack:pronouns",
 	"preview": "string",
 	"group": "lampblack:pronouns"
 }

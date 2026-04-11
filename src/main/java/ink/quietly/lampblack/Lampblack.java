@@ -3,12 +3,9 @@ package ink.quietly.lampblack;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.serialization.Codec;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -26,25 +23,18 @@ public class Lampblack implements ModInitializer {
 	public static final String ID = "lampblack";
 	public static final Logger LOGGER = LoggerFactory.getLogger(ID);
 	public static final String DEFAULT = "";
-
-	public static final AttachmentType<String> PRONOUNS = AttachmentRegistry.create(
-		id("pronouns"),
-		builder -> builder
-			.persistent(Codec.STRING)
-			.copyOnDeath()
-			.initializer(() -> DEFAULT)
-	);
+	public static final String PATH = "lampblack:pronouns";
 
 	@Override
 	public void onInitialize() {
 		log("scraping soot..");
 
-		Placeholders.registerServer(
+		Placeholders.register(
 			id("pronouns"),
 			(ctx, arg) -> {
-				var player = ctx.serverPlayer();
+				var player = ctx.player();
 				if (player != null) {
-					return PlaceholderResult.value(player.getAttachedOrCreate(PRONOUNS));
+					return PlaceholderResult.value(((LampblackPlayer) player).lampblack$getPronouns());
 				}
 
 				return PlaceholderResult.value("");
@@ -77,7 +67,7 @@ public class Lampblack implements ModInitializer {
 			);
 		});
 
-		log("initialized. let their pronouns be written.");
+		log("soot scraped! initialized.");
 	}
 
 	private int setPronouns(CommandContext<CommandSourceStack> ctx) {
@@ -90,7 +80,7 @@ public class Lampblack implements ModInitializer {
 		var player = ctx.getSource().getPlayer();
 		if (player != null) {
 			if (pronouns.length() <= 16) {
-				player.setAttached(PRONOUNS, pronouns);
+				((LampblackPlayer)player).lampblack$setPronouns(pronouns);
 				ctx.getSource().sendSystemMessage(Component.literal("Your preference has been saved! Some displays may not update until you send a chat message.").withStyle(ChatFormatting.GRAY));
 				return 1;
 			} else {
@@ -105,7 +95,7 @@ public class Lampblack implements ModInitializer {
 	private int clearPronouns(CommandContext<CommandSourceStack> ctx) {
 		var player = ctx.getSource().getPlayer();
 		if (player != null) {
-			player.setAttached(PRONOUNS, DEFAULT);
+			((LampblackPlayer)player).lampblack$setPronouns(null);
 			ctx.getSource().sendSystemMessage(Component.literal("Your preference has been cleared! Some displays may not update until you send a chat message.").withStyle(ChatFormatting.GRAY));
 			return 1;
 		} else {
@@ -114,12 +104,12 @@ public class Lampblack implements ModInitializer {
 	}
 
 	private int inspect(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-		var inspectionTarget = EntityArgument.getEntity(ctx, "target");
-		var pronouns = inspectionTarget.getAttachedOrCreate(PRONOUNS);
+		var player = EntityArgument.getPlayer(ctx, "target");
+		var pronouns = ((LampblackPlayer) player).lampblack$getPronouns();
 		if (!pronouns.equals(DEFAULT)) {
-			ctx.getSource().sendSystemMessage(Component.empty().append(inspectionTarget.getDisplayName()).append(Component.literal("'s pronoun preference: ")).append(pronouns).withStyle(ChatFormatting.GRAY));
+			ctx.getSource().sendSystemMessage(Component.empty().append(player.getDisplayName()).append(Component.literal("'s pronoun preference: ")).append(pronouns).withStyle(ChatFormatting.GRAY));
 		} else {
-			ctx.getSource().sendSystemMessage(Component.empty().append(inspectionTarget.getDisplayName()).append(Component.literal(" has not provided any pronoun preference.")).withStyle(ChatFormatting.GRAY));
+			ctx.getSource().sendSystemMessage(Component.empty().append(player.getDisplayName()).append(Component.literal(" has not provided any pronoun preference.")).withStyle(ChatFormatting.GRAY));
 		}
 		return 1;
 	}
@@ -129,6 +119,6 @@ public class Lampblack implements ModInitializer {
 	}
 
 	public static Identifier id(String ego) {
-		return Identifier.fromNamespaceAndPath(ID, ego);
+		return new Identifier(ID, ego);
 	}
 }

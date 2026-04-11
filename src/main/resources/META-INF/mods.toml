@@ -16,7 +16,7 @@ logoFile = "assets/${modId}/icon.png"
 "connector:placeholder" = true
 
 [[dependencies."${ modId }"]]
-modId = "connector"
+modId = "connectormod"
 type = "required"
 versionRange = "*"
 ordering = "NONE"
