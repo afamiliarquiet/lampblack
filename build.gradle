@@ -42,8 +42,8 @@ dependencies {
 
 	mappings(loom.layered {
 		officialMojangMappings()
-		parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
-		mappings("dev.lambdaurora:yalmm-mojbackward:1.20.1+build.4")
+		parchment("org.parchmentmc.data:parchment-1.21.1:2024.11.17@zip")
+		mappings("dev.lambdaurora:yalmm-mojbackward:1.21.1+build.3")
 	})
 }
 
@@ -71,13 +71,13 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
-	it.options.release = 17
+	it.options.release = 21
 }
 
 java {
 	withSourcesJar()
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
 
 

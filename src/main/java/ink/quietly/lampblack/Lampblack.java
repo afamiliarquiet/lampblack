@@ -119,6 +119,6 @@ public class Lampblack implements ModInitializer {
 	}
 
 	public static Identifier id(String ego) {
-		return new Identifier(ID, ego);
+		return Identifier.fromNamespaceAndPath(ID, ego);
 	}
 }
