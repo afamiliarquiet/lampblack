@@ -4,7 +4,8 @@
 	"package": "ink.quietly.lampblack.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"LampblackPlayerMixin"
+		"LampblackPlayerMixin",
+		"PersistentServerPlayerMixin"
 	],
 	"client": [
 	],
