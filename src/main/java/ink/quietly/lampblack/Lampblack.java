@@ -7,6 +7,7 @@ import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -24,6 +25,7 @@ public class Lampblack implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(ID);
 	public static final String DEFAULT = "";
 	public static final String PATH = "lampblack:pronouns";
+	public static boolean SWITCHY = FabricLoader.getInstance().isModLoaded("switchy");
 
 	@Override
 	public void onInitialize() {
@@ -34,6 +36,10 @@ public class Lampblack implements ModInitializer {
 			(ctx, arg) -> {
 				var player = ctx.player();
 				if (player != null) {
+					if (SWITCHY) {
+						String sayPronouns = SwitchyCompat.getSayPronouns(ctx.gameProfile());
+						if (sayPronouns != null) return PlaceholderResult.value(sayPronouns);
+					}
 					return PlaceholderResult.value(((LampblackPlayer) player).lampblack$getPronouns());
 				}
 
