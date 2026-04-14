@@ -17,11 +17,11 @@ import java.util.Objects;
 @Mixin(Player.class)
 public class LampblackPlayerMixin implements LampblackPlayer {
 	@Unique
-	private String lampblack$pronouns = Lampblack.DEFAULT;
+	private String lampblack$pronouns = Lampblack.CONFIG.defaultPronouns;
 
 	@Override
 	public void lampblack$setPronouns(@Nullable String pronouns) {
-		this.lampblack$pronouns = Objects.requireNonNullElse(pronouns, Lampblack.DEFAULT);
+		this.lampblack$pronouns = Objects.requireNonNullElse(pronouns, "");
 	}
 
 	@Override
