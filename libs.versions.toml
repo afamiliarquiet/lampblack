@@ -8,7 +8,7 @@ fapi = "0.87.0+1.20.1"
 
 papi = "2.1.4+1.20.1"
 style = "3.1.1+1.20.1"
-switchy = "3.6.0+1.20"
+switchy = "3.7.1+1.20"
 
 [plugins]
 loom = { id = "fabric-loom", version.ref = "loom" }
@@ -20,4 +20,4 @@ fl = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fl" }
 fapi = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fapi" }
 papi = { group = "eu.pb4", name = "placeholder-api", version.ref = "papi" }
 style = { group = "maven.modrinth", name = "styledplayerlist", version.ref = "style"}
-switchy = { group = "maven.modrinth", name = "switchy", version.ref = "switchy"}
+switchy = { group = "dev.sisby", name = "switchy", version.ref = "switchy"}
