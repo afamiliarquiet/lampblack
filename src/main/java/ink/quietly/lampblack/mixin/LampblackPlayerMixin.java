@@ -18,11 +18,11 @@ import java.util.Objects;
 @Mixin(Player.class)
 public class LampblackPlayerMixin implements LampblackPlayer {
 	@Unique
-	private String lampblack$pronouns = Lampblack.DEFAULT;
+	private String lampblack$pronouns = Lampblack.CONFIG.defaultPronouns;
 
 	@Override
 	public void lampblack$setPronouns(@Nullable String pronouns) {
-		this.lampblack$pronouns = Objects.requireNonNullElse(pronouns, Lampblack.DEFAULT);
+		this.lampblack$pronouns = Objects.requireNonNullElse(pronouns, "");
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class LampblackPlayerMixin implements LampblackPlayer {
 
 	@Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
 	private void readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
-		lampblack$pronouns = input.getStringOr(Lampblack.PATH, Lampblack.DEFAULT);
+		lampblack$pronouns = input.getStringOr(Lampblack.PATH, Lampblack.CONFIG.defaultPronouns);
 	}
 
 	@Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
