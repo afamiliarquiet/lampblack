@@ -7,6 +7,7 @@ import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -21,9 +22,10 @@ import static net.minecraft.commands.Commands.literal;
 
 public class Lampblack implements ModInitializer {
 	public static final String ID = "lampblack";
-	public static final Logger LOGGER = LoggerFactory.getLogger(ID);
-	public static final String DEFAULT = "";
 	public static final String PATH = "lampblack:pronouns";
+	public static final Logger LOGGER = LoggerFactory.getLogger(ID);
+	public static final LampblackConfig CONFIG = LampblackConfig.createToml(FabricLoader.getInstance().getConfigDir(), "", ID, LampblackConfig.class);
+	public static boolean SWITCHY = FabricLoader.getInstance().isModLoaded("switchy");
 
 	@Override
 	public void onInitialize() {
@@ -34,6 +36,10 @@ public class Lampblack implements ModInitializer {
 			(ctx, arg) -> {
 				var player = ctx.player();
 				if (player != null) {
+					if (SWITCHY) {
+						String sayPronouns = SwitchyCompat.getSayPronouns(ctx.gameProfile());
+						if (sayPronouns != null) return PlaceholderResult.value(sayPronouns);
+					}
 					return PlaceholderResult.value(((LampblackPlayer) player).lampblack$getPronouns());
 				}
 
@@ -48,10 +54,13 @@ public class Lampblack implements ModInitializer {
 				.then(
 					argument("pronouns", StringArgumentType.greedyString())
 						.suggests((ignored, builder) -> {
-							builder.suggest("he/him");
-							builder.suggest("she/her");
-							builder.suggest("they/them");
-
+							if (Lampblack.CONFIG.suggestBasicPronouns) {
+								Lampblack.CONFIG.basicPronouns.forEach(builder::suggest);
+							}
+							if (Lampblack.CONFIG.suggestFakePrompts) {
+								builder.suggest("<custom>", () -> "Type your preference here! Up to " + CONFIG.maxLength + " characters.");
+								builder.suggest("<blank>", () -> "Leave this space blank to clear your preference.");
+							}
 							return builder.buildFuture();
 						})
 						.executes(this::setPronouns)
@@ -79,12 +88,12 @@ public class Lampblack implements ModInitializer {
 
 		var player = ctx.getSource().getPlayer();
 		if (player != null) {
-			if (pronouns.length() <= 16) {
+			if (pronouns.length() <= CONFIG.maxLength) {
 				((LampblackPlayer)player).lampblack$setPronouns(pronouns);
-				ctx.getSource().sendSystemMessage(Component.literal("Your preference has been saved! Some displays may not update until you send a chat message.").withStyle(ChatFormatting.GRAY));
+				ctx.getSource().sendSystemMessage(Component.literal("Your preference has been saved! Some displays may not update until you send a chat message or reconnect.").withStyle(ChatFormatting.GRAY));
 				return 1;
 			} else {
-				ctx.getSource().sendSystemMessage(Component.literal("Could not set your preference.").withStyle(ChatFormatting.RED).append(Component.literal(" For display reasons, pronoun preference is limited to 16 characters.").withStyle(ChatFormatting.GRAY)));
+				ctx.getSource().sendSystemMessage(Component.literal("Could not set your preference.").withStyle(ChatFormatting.RED).append(Component.literal(" Pronoun preference is limited to 16 characters.").withStyle(ChatFormatting.GRAY)));
 				return 0;
 			}
 		} else {
@@ -106,7 +115,7 @@ public class Lampblack implements ModInitializer {
 	private int inspect(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
 		var player = EntityArgument.getPlayer(ctx, "target");
 		var pronouns = ((LampblackPlayer) player).lampblack$getPronouns();
-		if (!pronouns.equals(DEFAULT)) {
+		if (!pronouns.equals(Lampblack.CONFIG.defaultPronouns)) {
 			ctx.getSource().sendSystemMessage(Component.empty().append(player.getDisplayName()).append(Component.literal("'s pronoun preference: ")).append(pronouns).withStyle(ChatFormatting.GRAY));
 		} else {
 			ctx.getSource().sendSystemMessage(Component.empty().append(player.getDisplayName()).append(Component.literal(" has not provided any pronoun preference.")).withStyle(ChatFormatting.GRAY));
